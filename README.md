@@ -1,5 +1,11 @@
-# react-webgame
-소스코드 레포지토리입니다.
+## **🔎소개**  
+인프런 '제로초'님의 무료강의 [웹 게임을 만들며 배우는 React](https://www.inflearn.com/dashboard)를 수강하며
+작성한 필기 및 실습 노트입니다.
 
-# svelte-webgame
-https://github.com/makefullstack/svelte-webgame
+<br/>
+
+## **🧭나자신을 위한 수강기록**  
+1. 2022.8.25 : 1~6강
+
+<br/>
+
