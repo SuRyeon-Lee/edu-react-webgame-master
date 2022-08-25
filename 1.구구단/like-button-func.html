@@ -1,0 +1,40 @@
+<html>
+<head>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<!--<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>-->
+<!--<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>-->
+<script type="text/babel"> //babel이 없으면 jsx파일을 읽을 수 없다.
+  'use strict';
+
+  function LikeButton(){ //함수형 컴포넌트 X, 함수 컴포넌트 O
+    const [liked,setLike] = React.useState(false); //📌 꼭 배열!!
+    //보통 파일 상단에서 import React, { useState } from 'react'; 
+    //해주고 useState(false); 앞에 React.없이 쓰지만, 여기선 CDN으로 첨부했으므로
+    //여기선 React.useState로 앞에 React를 적어줘야한다.
+
+    //함수 컴포넌트는 this를 쓸 일이 없어, 헷갈리지 않고 코드도 짧아서 좋다.
+    if(liked){
+        return "You liked this";
+    }
+    return (
+        <button onClick={()=>{setLike(true)}}>Like</button>
+    )
+  }
+  
+</script>
+<script type="text/babel">
+  //17과 18을 한번에 구분할 수 있는 코드
+  ReactDOM.render(<LikeButton/>, document.querySelector('#root')); //react17버전 코드
+  // ReactDOM.createRoot(document.querySelector('#root')).render(
+  //   <div>
+  //     <LikeButton/>
+  //   </div>
+  // ) //react18버전 코드
+</script>
+</body>
+</html>
