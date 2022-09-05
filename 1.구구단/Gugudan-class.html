@@ -47,6 +47,7 @@
             }
           }
         )
+        this.input.focus();
       }else{
         this.setState({
           result: '땡',
@@ -60,6 +61,12 @@
       this.setState({value: e.target.value})
     }
 
+    input; //밖에 변수 선언 잊지말기
+    
+    onRefInput = (dom) => {
+      this.input = dom
+    }
+
     render(){
       return(
         <React.Fragment> 
@@ -67,7 +74,11 @@
             <div>{this.state.first}곱하기{this.state.second}는?</div>
             <form onSubmit={this.onSubmit}> {/* 📌 form이 있다면 onSubmit을 쓰는 편(없음 onClick) */}
               {/* 📌 value는 state로 관리해야 오류도 적고 핸들링하기 편하다. */}
-              <input type="number" value={this.state.value} onChange={this.onChange}/>
+              {/* DOM에 접근하기 위해서는 ref를 사용하면 된다. */}
+              {/* 🌟 class 컴포넌트의 ref는 함수를 넣어서 외부 변수에 dom을 인자로 받아 재할당 해준다. => 걍 외운다.*/}
+              {/* <input ref={(dom) => this.input = dom}type="number" value={this.state.value} onChange={this.onChange}/> */}
+              {/* 위와 같이 작성해도 되지만, 그럼 리랜더링 될 경우 함수도 다시 만들기 때문에 외부에 함수를 만드는 방식이 더 좋다.*/}
+              <input ref={this.onRefInput} type="number" value={this.state.value} onChange={this.onChange}/>
               <button>입력!</button>
             </form>
             <div>{this.state.result}</div>
