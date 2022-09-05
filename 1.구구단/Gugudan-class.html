@@ -10,54 +10,53 @@
 <div id="root"></div> <!-- 결과: <div id="root"><button>Like</button></div> -->
 <script type="text/babel">
   class GuGuDan extends React.Component {
-    state = {
-      first: Math.ceil(Math.random() * 9),
-      second: Math.ceil(Math.random() * 9),
-      value: '',
-      result: '',
-    };
-
+    constructor(props){
+      super(props);
+      this.state = {
+        first : Math.ceil(Math.random() * 9),
+        second : Math.ceil(Math.random() * 9),
+        third : '',
+        value : '',
+        result : '',
+      }
+    }
+    // 📌 자바스크립트 함수는 메서드로 render 밖에 함수 작성하고 render안에 this.method로 걸어주기
     onSubmit = (e) => {
       e.preventDefault();
-      if (parseInt(this.state.value) === this.state.first * this.state.second) {
-        this.setState((prevState) => {
-          return {
-            result: '정답: ' + prevState.value,
-            first: Math.ceil(Math.random() * 9),
-            second: Math.ceil(Math.random() * 9),
-            value: '',
-          };
-        });
-        this.input.focus();
-      } else {
+      if(parseInt(this.state.value) === this.state.first * this.state.second){
+        this.setState({
+          //요렇게 한꺼번에 state를 설정해줄 수 있다.
+          result: '정답',
+          first : Math.ceil(Math.random() * 9),
+          second : Math.ceil(Math.random() * 9),
+          third : this.state.first * this.state.second,
+          value: '',
+        })
+      }else{
         this.setState({
           result: '땡',
+          third : '',
           value: '',
-        });
-        this.input.focus();
+        })
       }
-    };
+    }
 
     onChange = (e) => {
-      this.setState({ value: e.target.value });
-    };
+      this.setState({value: e.target.value})
+    }
 
-    input;
-
-    onRefInput = (c) => { this.input = c; };
-
-    // 컨텐츠
-    render() {
-      return (
-        <React.Fragment>
-          <div>{this.state.first} 곱하기 {this.state.second}는?</div>
-          <form onSubmit={this.onSubmit}>
-            <input ref={this.onRefInput} type="number" value={this.state.value} onChange={this.onChange}/>
-            <button>입력!</button>
-          </form>
-          <div>{this.state.result}</div>
-        </React.Fragment>
-      );
+    render(){
+      return(
+        <div>
+            <div>{this.state.first}곱하기{this.state.second}는?</div>
+            <form onSubmit={this.onSubmit}>
+              {/* 📌 value는 state로 관리해야 오류도 적고 핸들링하기 편하다. */}
+              <input type="number" value={this.state.value} onChange={this.onChange}/>
+              <button>입력!</button>
+            </form>
+            <div>{this.state.third} {this.state.result}</div>
+        </div>
+      )
     }
   }
 
