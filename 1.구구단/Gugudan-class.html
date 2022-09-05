@@ -10,17 +10,15 @@
 <div id="root"></div> <!-- 결과: <div id="root"><button>Like</button></div> -->
 <script type="text/babel">
   class GuGuDan extends React.Component {
-    constructor(props){
-      super(props);
-      this.state = {
+    state = { //🛑 실무에선 constructor와 this 빼고 많이 쓴다.
         first : Math.ceil(Math.random() * 9),
         second : Math.ceil(Math.random() * 9),
         third : '',
         value : '',
         result : '',
-      }
     }
     // 📌 자바스크립트 함수는 메서드로 render 밖에 함수 작성하고 render안에 this.method로 걸어주기
+    // 🛑 메서드를 밖에 빼면 function(함수 선언문)을 쓰지 못한다(this가 달라져버린다.) 무조건 const 없이 화살표 함수로!!
     onSubmit = (e) => {
       e.preventDefault();
       if(parseInt(this.state.value) === this.state.first * this.state.second){
@@ -47,15 +45,16 @@
 
     render(){
       return(
-        <div>
+        <React.Fragment> 
+           {/* 📌 <>와</>로 감싸서 에러가 난다면 Babel버전때문, 이땐, React.Fragment로 감싼다.*/}
             <div>{this.state.first}곱하기{this.state.second}는?</div>
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={this.onSubmit}> {/* 📌 form이 있다면 onSubmit을 쓰는 편(없음 onClick) */}
               {/* 📌 value는 state로 관리해야 오류도 적고 핸들링하기 편하다. */}
               <input type="number" value={this.state.value} onChange={this.onChange}/>
               <button>입력!</button>
             </form>
             <div>{this.state.third} {this.state.result}</div>
-        </div>
+        </React.Fragment>
       )
     }
   }
