@@ -22,14 +22,31 @@
     onSubmit = (e) => {
       e.preventDefault();
       if(parseInt(this.state.value) === this.state.first * this.state.second){
-        this.setState({
-          //요렇게 한꺼번에 state를 설정해줄 수 있다.
-          result: '정답',
-          first : Math.ceil(Math.random() * 9),
-          second : Math.ceil(Math.random() * 9),
-          third : this.state.first * this.state.second,
-          value: '',
-        })
+        this.setState(
+          // 아래와 같은 코드로 state하나 더 설정없이 간단하게 끝낼 수 있다.
+          //{
+          // result: '정답 ' + this.state.value, //🌟 요기 중요
+          // first : Math.ceil(Math.random() * 9),
+          // second : Math.ceil(Math.random() * 9),
+          // value: '',
+          //}
+
+          // 이떄 주의할 점은 this.state.value로 참고하는 값은 현재 값이고,
+          // key:value로 설정하는 값은 미래의 값이라는 점이다.
+          // 이 부분이 헷갈릴 수 있으므로, 아래의 방법을 참고한다.
+
+          // 🌟📌 Even Better 새로운 state를 리턴하는 함수를 setState에 넣어주는 방법
+          // 인자로 prevState를 받아올 수 있어 코드가 직관적이다.
+          // 외우자!! this.state가 setState안에 들어갈 때는, 객체를 리턴하는 함수를 넣는다.
+          (prevState) => {
+            return {
+              result: '정답 ' + prevState.value,
+              first : Math.ceil(Math.random() * 9),
+              second : Math.ceil(Math.random() * 9),
+              value: '',
+            }
+          }
+        )
       }else{
         this.setState({
           result: '땡',
@@ -53,7 +70,7 @@
               <input type="number" value={this.state.value} onChange={this.onChange}/>
               <button>입력!</button>
             </form>
-            <div>{this.state.third} {this.state.result}</div>
+            <div>{this.state.result}</div>
         </React.Fragment>
       )
     }
