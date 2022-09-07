@@ -11,43 +11,62 @@
 
 <script type="text/babel">
   'use strict';
+  //함수에서도 ref랑 state를 사용할 수 있게 해준게 Hooks
+  //코드의 양이 훨씬 적어진다.
+  //여기서 class문법과 다른점: ref와 useRef Hook, setState와 useState Hook
+  //🛑 주의! 클래스 문법에선 state가 바뀌면 render(){}만 재실행되지만,
+  //함수 문법에선 함수 전체가 다시 재실행되기때문에, 좀 더 느릴 수 있다.
   const GuGuDan = () => {
-    const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
-    const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
-    const [value, setValue] = React.useState('');
-    const [result, setResult] = React.useState('');
+    const [first,setFirst] = React.useState(Math.ceil(Math.random() * 9));
+    const [second,setSecond] = React.useState(Math.ceil(Math.random() * 9));
+    const [value,setValue] = React.useState('');
+    const [result,setResult] = React.useState('');
+
+    //📌 const [states,setStates] = React.useState({first:5,second:2,value:'',restul:''})
+    //위와 같은 식으로 쓸 수도 있지만,
+    //그럼 아래에서 setStates()할때,하나의 second만 바꿀 경우도, first,second,value,result 모두 다 적어줘야한다.
+    //setStates({first:5,second:6,value:'',restul:''})
+    //이점이 class문법의 setState와 달라서, 구조분해할당으로 사용하는것이 훨 편하다.
+
     const inputEl = React.useRef(null);
 
-    const onSubmitForm = (e) => {
+    const onChange = (e)=>{
+      setValue(e.target.value) //class에서 setState해주던게 없어짐
+    }
+
+    const onSubmit = (e) => { //event는 전달안해줘도 자동으로 인자로 받음
       e.preventDefault();
-      if (parseInt(value) === first * second) {
-        setResult('정답');
-        setFirst(Math.ceil(Math.random() * 9));
-        setSecond(Math.ceil(Math.random() * 9));
-        setValue('');
-        inputEl.current.focus();
-      } else {
-        setResult('땡');
-        setValue('');
-        inputEl.current.focus();
+      if(parseInt(value) === first * second){
+        //📌set에 함수 넣어서 이전 state 가져오기
+        //class에서 this.setState((prevState)=>prevState.result) 이런식으로 예전 state가져온것처럼
+        //함수에서 setResult((prevResult)=>prevResult)이런식으로 가져올수 있다.
+        setResult("정답")
+        setFirst(Math.ceil(Math.random() * 9))
+        setSecond(Math.ceil(Math.random() * 9))
+        setValue('')
+        //state를 재설정하면 render가 일어나니까 render가 총 네번 일어나나? 생각할 수 있지만
+        //실제론 그게 아니다! 비동기로 처리해서 react가 알아서 모아서 한번의 render에 다 업뎃 시킨다.
+        inputEl.current.focus()
+      }else{
+        setResult("땡")
+        setValue('')
+        inputEl.current.focus() //📌 DOM요소에 접근할 때 current로 접근해야한다.
       }
-    };
-    return (
+    }
+
+    return ( //📌 class에서 render(){return()}부분
       <React.Fragment>
         <div>{first} 곱하기 {second}는?</div>
-        <form onSubmit={onSubmitForm}>
-          <input
-            ref={inputEl}
-            type="number"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
+        <form onSubmit={onSubmit}>
+          <input ref={inputEl} value={value} onChange={onChange}/>
+          {/*📌 ref={this.onRefInput}처럼 메서드 연결해서 변수로 dom을 설정하는 과정이 필요없다.*/}
+          {/*const inputEl = React.useRef(null) 선언하고 원하는 부분에 넣어주면 끝!*/}
           <button>입력!</button>
         </form>
         <div id="result">{result}</div>
       </React.Fragment>
-    );
-  };
+    )
+  }
 
 </script>
 <script type="text/babel">
