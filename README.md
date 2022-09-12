@@ -11,6 +11,7 @@
 
 ## **🤔추가 공부 필요**
 1. currentTarget과 event target 차이점
+2. 웹팩 (특히, react-refresh-webpack-plugin과 devServer, hot reload부분) 현재 <2.끝말잇기> 부분 핫리로드 정상적이지 않음
 
 <br/>
 
