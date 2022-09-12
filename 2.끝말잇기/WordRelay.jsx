@@ -43,7 +43,7 @@
 
 
 
-//------------- 📝 Original Codes (Uncontrolled input) -------------
+//------------- 📝 Fixed Codes (Uncontrolled input) -------------
 
 const React = require('react');
 const { useState, useRef } = React;
