@@ -108,25 +108,79 @@
 
 //------------- 📝 My Codes -------------
 import React, { Component } from 'react';
+import Try from './Try';
 
 function getNumbers(){ //숫자 네개를 겹치지 않고 랜덤하게 뽑는 함수 
-
+  const candidate = [1,2,3,4,5,6,7,8,9];
+  const array = [];
+  for(let i = 0; i < 4; i += 1){
+    const chosen = candidate.splice(Math.floor(Math.random() * (9 - i)), 1)[0];
+    array.push(chosen);
+  }
+  return array;
 }
 
 class NumberBaseball extends Component {
   state = {
     result: '',
     value: '',
-    answer: getNumbers(),
+    answer: getNumbers(), //ex) [1,3,5,7]
     tries: []
   }
 
-  onSubmitForm = () => { //렌더같이 기본 제공되는 메소드 아니라 내가 작성할떈 꼭 화살표함수로!
-
+  onSubmitForm = (e) => { //렌더같이 기본 제공되는 메소드 아니라 내가 작성할떈 꼭 화살표함수로!
+    //화살표로 안쓰면 안에서 this를 못 쓴다.
+    //반면 화살표함수는 bind(this)를 자동으로 해주기 때문에 this를 쓸 수 있다.
+    e.preventDefault();
+    if(this.state.value === this.state.answer.join('')){
+      this.setState({
+        result: '홈런!',
+        //🛑push로 하지 말고 muttable하게 새로 바꿔야한다.
+        //리액트가 랜더링 하는 기준이 기존 값이랑 새로운 값이 바뀌었을 때를 인식해서 하는 원리인데
+        //참조 자료형에서 push를 하게 될경우 주소 값이 동일하므로 변경사항을 인식하지 못하고
+        //리랜더링 하지 못한다.
+        tries: [...this.state.tries, {try: this.state.value, result:'홈런!'}]
+      })
+      alert('게임을 다시 시작합니다!');
+      this.setState({
+          value: '',
+          answer: getNumbers(),
+          tries: [],
+        });
+    } else { //답 틀렸으면
+      const answerArray = this.state.value.split('').map((v)=>parseInt(v));
+      let strike = 0;
+      let ball = 0;
+      if(this.state.tries.length >= 9){ //10번 이상 틀렸을 때
+        this.setState({
+          result: `10번 넘게 틀려서 실패! 답은 ${answer.join(',')}였습니다.`
+        });
+        alert('게임을 다시 시작합니다!');
+        this.setState({
+          value: '',
+          answer: getNumbers(),
+          tries: [],
+        })
+      } else { //10번 이내로 틀렸을 때
+        for(let i = 0; i < 4; i ++){
+          if(answerArray[i] === this.state.answer[i]){
+            strike += 1;
+          }else if(this.state.answer.includes(answerArray[i])){
+            ball += 1;
+          }
+        }
+        this.setState({
+          tries: [...this.state.tries, {try: this.state.value, result:`${strike} 스트라이크, ${ball} 볼입니다.`}],
+          value: '',
+        })
+      }
+    }
   };
 
-  onChangeValue = () =>{
-
+  onChangeValue = (e) =>{
+    this.setState({
+      value : e.target.value
+    })
   };
 
   render() {
@@ -140,44 +194,12 @@ class NumberBaseball extends Component {
       <div>시도: {this.state.tries.length}</div>
       <ul>
         { 
-        /* 
-        📌 react는 반복문을 map으로 쓴다 
-        예시1. 만약 요소가 두개이상이면 이차원 배열을 만들어서 쓸수 있다. 
-        예시2. 혹은 객체로 만들어서 쓸 수도 있다. (많이 씀)
-        */
-        
-        //예시1
-        // [
-        //   ['사과','달다'],
-        //   ['바나나','맛있다'],
-        //   ['포도','상큼하다'],
-        //   ['귤','새콤하다'],
-        //   ['감','달달하다'],
-        //   ['배','촉촉하다'],
-        //   ['밤','구수하다'],
-        // ].map((el)=>{
-        //   return(
-        //     <li><b>{el[0]}</b> {el[1]}</li>
-        //   )
-        // })
-
-        //예시2
-        // 📌고유한 값을 key로 넣어줘야 한다.
-        // idx는 절대 key로 사용하지 않는다!
-        [
-          {fruits:'사과',taste:'달다'},
-          {fruits:'바나나',taste:'맛있다'},
-          {fruits:'포도',taste:'상큼하다'},
-          {fruits:'귤',taste:'새콤하다'},
-          {fruits:'감',taste:'달달하다'},
-          {fruits:'배',taste:'촉촉하다'},
-          {fruits:'밤',taste:'구수하다'},
-        ].map((el,idx)=>{
-          return(
-            <li key={el.fruits + el.taste}><b>{el.fruits}</b> {el.taste}</li>
-          )
-        })
-
+          // 반복문 단위로 컴포넌트 만들기
+          this.state.tries.map((v,i)=>{
+            return ( 
+              <Try key={`${i + 1}차 시도 :`} tryInfo={v}/>
+            )
+          })
         }
       </ul>
     </>
