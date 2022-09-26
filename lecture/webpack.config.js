@@ -88,7 +88,11 @@ module.exports = {
   module: {
     rules: [{
       test: /\.jsx?/, //rule을 적용할 파일들 설정, js파일이나 jsx파일 적용하겠다.
-      loader: 'babel-loader', //어떤 rule을 적용할 것인가, babel의 옵션을 적용하겠다.
+      loader: 'babel-loader', 
+      //웹팩은 기본적으로 JavaScript와 JSON 파일만 이해한다.
+      //But! loader를 사용하면 다른 유형의 파일을 처리하거나,
+      //그들을 유효한 모듈로 변환해 애플리케이션에 사용하거나 디펜던시 그래프에 추가할 수 있다.
+      //어떤 rule을 적용할 것인가, babel의 옵션을 적용하겠다.
       options: { //babel의 옵션을 넣어줄것이다.
         presets: ['@babel/preset-env','@babel/preset-react'],
         //plugins: [@babel/plugin-proposal-class-properties] 오류 안나서 안적음
@@ -97,7 +101,8 @@ module.exports = {
   },
 
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, 'dist'), 
+    //path 모듈을 사용할 때는 꼭 path 속성을 위에서 import시켜줘야한다.
     //경로를 합쳐준다. path.join(현재폴더명, output들어갈 하위폴더)
     //pc마다 경로가 달라도 앞의 경로는 다 알아서 변수로 불러다준다.
     filename: 'app.js'
