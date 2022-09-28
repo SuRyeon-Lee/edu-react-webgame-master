@@ -145,7 +145,7 @@
 
 
 //------------- 📝 직접 Class > Hooks로 바꿔보기 -------------
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Try from './Try';
 // import Try from './TryClass';
 
@@ -223,6 +223,11 @@ const NumberBaseball = () => {
   //lazy init이라고 부른다.
 
   const [tries, setTries] = useState([]);
+  const inputEl = useRef(null);
+  /*
+    useRef 사용법이 함수형과 class가 많이 달라 헷갈린다.
+    이럴때 class 컴포넌트에서 createRef를 사용하면 비슷하게 사용가능 > NumberBaseballClass.jsx 참고
+  */
 
   const onSubmitForm = (e) => { 
     e.preventDefault();
@@ -237,6 +242,7 @@ const NumberBaseball = () => {
       setValue('');
       setAnswer(getNumbers()); //🛑 이런 데에선 lazy init쓸 수 없다!! useState에서만 lazy init
       setTries([]);
+      inputEl.current.focus(); //Hooks에선 ref를 쓰려면 current를 타야한다.
     } else { //답 틀렸으면
       const answerArray = value.split('').map((v)=>parseInt(v));
       let strike = 0;
@@ -248,7 +254,7 @@ const NumberBaseball = () => {
         setValue('');
         setAnswer(getNumbers()) //🛑 이런 데에선 lazy init쓸 수 없다!! useState에서만 lazy init
         setTries([]);
-
+        inputEl.current.focus(); //Hooks에선 ref를 쓰려면 current를 타야한다.
       } else { //10번 이내로 틀렸을 때
         for(let i = 0; i < 4; i ++){
           if(answerArray[i] === answer[i]){
@@ -275,7 +281,7 @@ const NumberBaseball = () => {
   <>
     <h1>{result}</h1>
     <form onSubmit={onSubmitForm}>
-      <input maxLength={4} value={value} onChange={onChangeValue}/> 
+      <input ref={inputEl} maxLength={4} value={value} onChange={onChangeValue}/> 
     </form>
     <div>시도: {tries.length}</div>
     <ul>

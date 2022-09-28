@@ -107,7 +107,7 @@
 
 
 //------------- 📝 My Codes -------------
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import Try from './Try';
 
 function getNumbers(){ //숫자 네개를 겹치지 않고 랜덤하게 뽑는 함수 
@@ -151,6 +151,7 @@ class NumberBaseball extends Component {
           answer: getNumbers(),
           tries: [],
         });
+        this.inputRef.current.focus(); //🛑 createRef를 사용하면 useRef랑 동일한 방식으로 current 필요함
     } else { //답 틀렸으면
       const answerArray = value.split('').map((v)=>parseInt(v));
       let strike = 0;
@@ -165,6 +166,7 @@ class NumberBaseball extends Component {
           answer: getNumbers(),
           tries: [],
         })
+        this.inputRef.current.focus(); //🛑 createRef를 사용하면 useRef랑 동일한 방식으로 current 필요함
       } else { //10번 이내로 틀렸을 때
         for(let i = 0; i < 4; i ++){
           if(answerArray[i] === answer[i]){
@@ -191,6 +193,12 @@ class NumberBaseball extends Component {
     })
   };
 
+  // inputRef;
+  // onInputRef = (c) => {this.inputRef = c;}
+
+  inputRef = createRef()
+  //🛑createRef를 사용해서 넣으면 바로 ref로 연결해준게 들어감
+
   render() {
     //🛑아래처럼 구조분해 쓰면 return문 안에서 this.state일일 적지 않아도 된다.
     const {result, value, tries} = this.state
@@ -198,7 +206,7 @@ class NumberBaseball extends Component {
     <>
       <h1>{result}</h1>
       <form onSubmit={this.onSubmitForm}>
-        <input maxLength={4} value={value} onChange={this.onChangeValue}/> 
+        <input ref={this.onInputRef} maxLength={4} value={value} onChange={this.onChangeValue}/> 
         {/* value와 onChange는 항상 세트, 안할거면 defaultValue*/}
       </form>
       <div>시도: {tries.length}</div>
