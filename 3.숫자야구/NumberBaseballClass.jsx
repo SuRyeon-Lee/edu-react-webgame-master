@@ -137,13 +137,13 @@ class NumberBaseball extends Component {
     const { answer, value, tries} = this.state;
     e.preventDefault();
     if(value === answer.join('')){
-      this.setState({
-        result: '홈런!',
-        //🛑push로 하지 말고 muttable하게 새로 바꿔야한다.
-        //리액트가 랜더링 하는 기준이 기존 값이랑 새로운 값이 바뀌었을 때를 인식해서 하는 원리인데
-        //참조 자료형에서 push를 하게 될경우 주소 값이 동일하므로 변경사항을 인식하지 못하고
-        //리랜더링 하지 못한다.
-        tries: [...tries, {try: value, result:'홈런!'}]
+      //🛑 옛날 값을 응용하여 현재 값을 바꿀 땐, 함수형 setState
+      // 그래야 state 연달아 바꿀때 문제가 안생김
+      this.setState((prevState) => {
+        return {
+          result: '홈런!',
+          tries: [...prevState.tries, {try: value, result:`${strike} 스트라이크, ${ball} 볼입니다.`}],
+        }
       })
       alert('게임을 다시 시작합니다!');
       this.setState({
@@ -173,9 +173,13 @@ class NumberBaseball extends Component {
             ball += 1;
           }
         }
-        this.setState({
-          tries: [...tries, {try: value, result:`${strike} 스트라이크, ${ball} 볼입니다.`}],
-          value: '',
+        //🛑 옛날 값을 응용하여 현재 값을 바꿀 땐, 함수형 setState
+        // 그래야 state 연달아 바꿀때 문제가 안생김
+        this.setState((prevState) => {
+          return {
+            tries: [...prevState.tries, {try: value, result:`${strike} 스트라이크, ${ball} 볼입니다.`}],
+            value: '',
+          }
         })
       }
     }
