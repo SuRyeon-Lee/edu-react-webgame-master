@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 /*
   🗒 memo
   
@@ -18,9 +18,22 @@ import React, { memo } from 'react';
 */ 
 
 const Try = memo(({tryInfo}) => {
+  // 원래 props는 부모가 바꿔야 한다.
+  // tryInfo.try = 'hello'; 이런식으로 하면 안된다.
+  // 근데 하다보면 바꿔야 할 때가 생기긴 한다.
+
+  // 그럴떄 props를 state에 넣어준다.
+  // const [result, setResult] = useState(tryInfo.result);
+  // 받은 props를 state로 만든다음에 state를 바꿔준다.
+  // 그래야 부모한테 영향을 안끼친다.
+  // 자식은 부모를 바꾸면 안되기 때문에!! 
+  // const onClick = () => {
+  //   setResult('1');
+  // }
   return (
     <li>
       <div>{tryInfo.try}</div>
+      {/* <di onClick={onClick}>{result}</di> */}
       <div>{tryInfo.result}</div>
     </li>
   );

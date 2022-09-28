@@ -146,6 +146,12 @@ class NumberBaseball extends Component {
         }
       })
       alert('게임을 다시 시작합니다!');
+      /*
+        🛑 render안에서 setState를 쓰면 안된다.
+
+        render > setState실행 > 다시 render > 다시 setState실행
+        무한반복된다.
+      */
       this.setState({
           value: '',
           answer: getNumbers(),
